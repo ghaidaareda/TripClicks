@@ -3,6 +3,7 @@ const User = require('./../models/userModel');
 const jwt = require('jsonwebtoken');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const { request } = require('http');
 const signToken = (id) =>
 	jwt.sign({ id }, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_EXPIRE_IN,
@@ -13,6 +14,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 		email: req.body.email,
 		password: req.body.password,
 		passwordConfirmation: req.body.password,
+		passwordChangedAt: req.body.passwordChangedAt,
 	});
 
 	const token = signToken(newUser._id);
@@ -81,5 +83,15 @@ exports.protect = catchAsync(async (req, res, next) => {
 		);
 	}
 	//4)check if user change password after token was issued
+	if (currentUser.changePasswordAfter(decoded.iat)) {
+		return next(
+			new AppError(
+				'user change password! Please log in again',
+				401
+			)
+		);
+	}
+	req.user = currentUser;
+	// acsess to protected route
 	next();
 });

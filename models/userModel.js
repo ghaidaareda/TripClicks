@@ -35,6 +35,7 @@ const userSchema = new mongoose.Schema({
 				'password confirmation is not the same as password',
 		},
 	},
+	passwordChangedAt: { type: Date },
 });
 userSchema.pre('save', async function (next) {
 	//run this function if password is modified
@@ -51,6 +52,20 @@ userSchema.methods.correctPassword = async function (
 	userPassword
 ) {
 	return bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.changePasswordAfter = function (
+	JWTTimestamp
+) {
+	if (this.passwordChangedAt) {
+		const changedTimeStamp = parseInt(
+			this.passwordChangedAt.getTime() / 1000
+		);
+		//console.log(changedTimeStamp, JWTTimestamp);
+		return JWTTimestamp < changedTimeStamp;
+	}
+	// user did not change the token after it was issued
+	return false;
 };
 const User = mongoose.model('User', userSchema);
 module.exports = User;
