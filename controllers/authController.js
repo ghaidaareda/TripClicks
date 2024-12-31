@@ -11,12 +11,13 @@ const signToken = (id) =>
 	jwt.sign({ id }, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_EXPIRE_IN,
 	});
+
 exports.signup = catchAsync(async (req, res, next) => {
 	const newUser = await User.create({
 		name: req.body.name,
 		email: req.body.email,
 		password: req.body.password,
-		passwordConfirmation: req.body.password,
+		passwordConfirmation: req.body.passwordconfirmation,
 		passwordChangedAt: req.body.passwordChangedAt,
 		role: req.body.role,
 	});
@@ -194,7 +195,8 @@ exports.resetPassword = catchAsync(
 			);
 		}
 		user.password = req.body.password;
-		user.passwordConfirm = req.body.passwordConfirm;
+		user.passwordConfirmation =
+			req.body.passwordconfirmation;
 		user.passwordResetToken = undefined;
 		user.passwordResetExpires = undefined;
 		await user.save();
