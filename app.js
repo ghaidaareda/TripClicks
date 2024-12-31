@@ -3,15 +3,23 @@ fs = require('fs');
 const morgan = require('morgan');
 const AppError = require('./utils/appError');
 const globlErrorHandlers = require('./controllers/errorController');
-
+const rateLimit = require('express-rate-limit');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
-// middleware
-const app = express();
 
+const app = express();
+// GLOBAL middleware
 if (process.env === 'development') {
 	app.use(morgan('dev'));
 }
+const limiter = rateLimit({
+	max: 2,
+	windowMs: 60 * 60 * 1000, // allow only 100 requests per hour for the same IP
+	message:
+		'too many requests per hour for the same IP , please try again after 1 hour',
+});
+app.use('/api', limiter);
+
 app.use(express.json());
 //serve static files from folders not from server
 app.use(express.static(`${__dirname}/starter/public`));
