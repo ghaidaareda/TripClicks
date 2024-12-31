@@ -50,11 +50,6 @@ const userSchema = new mongoose.Schema({
 		default: true,
 		select: false,
 	},
-	active: {
-		type: Boolean,
-		default: true,
-		select: false,
-	},
 });
 
 userSchema.pre('save', async function (next) {
@@ -77,7 +72,7 @@ userSchema.pre('save', function (next) {
 
 userSchema.pre(/^find/, function (next) {
 	//current quary
-	this.find({ active: true });
+	this.find({ active: { $ne: false } });
 	next();
 });
 
