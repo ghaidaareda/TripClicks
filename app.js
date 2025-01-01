@@ -9,7 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
-
+const hpp = require('hpp');
 const app = express();
 // GLOBAL middleware
 //security http headers
@@ -38,6 +38,19 @@ app.use(mongoSanitize());
 
 app.use(xss());
 
+// param. pollution
+app.use(
+	hpp({
+		whitelist: [
+			'duration',
+			'ratingsQuantity',
+			'ratingsAverage',
+			'maxGroupSize',
+			'difficulty',
+			'price',
+		],
+	})
+);
 //serve static files from folders not from server
 app.use(express.static(`${__dirname}/starter/public`));
 

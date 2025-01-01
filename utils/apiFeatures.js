@@ -8,21 +8,31 @@ class APIFeatures {
 		//make shallow copy to add filters
 		const queryObj = { ...this.queryString };
 		//1)basic filters
-		const excludedFilds = ['page', 'sort', 'limit', 'fields'];
+		const excludedFilds = [
+			'page',
+			'sort',
+			'limit',
+			'fields',
+		];
 		excludedFilds.forEach((el) => {
 			delete queryObj[el];
 		});
 		//2)advanced filters
 
 		let queryStr = JSON.stringify(queryObj);
-		queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+		queryStr = queryStr.replace(
+			/\b(gte|gt|lte|lt)\b/g,
+			(match) => `$${match}`
+		);
 		this.query = this.query.find(JSON.parse(queryStr));
 		return this;
 	}
 	sort() {
 		if (this.queryString.sort) {
-			const sortBy = this.queryString.sort.split(',').join(' ');
-			this.query = this.query.sort(this.queryString.sortBy);
+			const sortBy = this.queryString.sort
+				.split(',')
+				.join(' ');
+			this.query = this.query.sort(sortBy);
 		} else {
 			this.query = this.query.sort('-createdAt');
 		}
@@ -30,7 +40,9 @@ class APIFeatures {
 	}
 	limitFields() {
 		if (this.queryString.fields) {
-			const fields = this.queryString.fields.split(',').join(' ');
+			const fields = this.queryString.fields
+				.split(',')
+				.join(' ');
 			this.query = this.query.select(fields);
 		} else {
 			this.query = this.query.select('-__v');
