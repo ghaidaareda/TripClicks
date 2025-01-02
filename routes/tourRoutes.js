@@ -3,7 +3,11 @@ const tourController = require('./../controllers/tourController');
 const checkBody = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
 const router = express.Router();
-//rzouter.param('id', tourController.checkID);
+const reviewRouter = require('./../routes/reviewRoutes');
+
+router.use('/:tourid/reviews', reviewRouter);
+
+//router.param('id', tourController.checkID);
 router
 	.route('/top-5-cheap')
 	.get(
