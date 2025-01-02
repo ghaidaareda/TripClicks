@@ -33,7 +33,9 @@ exports.getOnetour = catchAsync(async (req, res, next) => {
 	// if (!mongoose.Types.ObjectId.isValid(id)) {
 	// 	return next(new AppError('Invalid ID format', 400)); // Bad request
 	// }
-	const tour = await Tour.findById(req.params.id); // create new quary
+	const tour = await Tour.findById(req.params.id).populate(
+		'reviews'
+	); // create new quary
 
 	//Tour.finfOne({_id: req.params.id}) both works rhe same
 

@@ -11,6 +11,8 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const hpp = require('hpp');
 const app = express();
+const reviewRouter = require('./routes/reviewRoutes');
+
 // GLOBAL middleware
 //security http headers
 app.use(helmet());
@@ -64,6 +66,7 @@ app.use((req, res, next) => {
 //ROUTES
 app.use('/api/v1/tours', tourRouter); //middleware to connect router to this app
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 app.all('*', function (req, res, next) {
 	// const err = new Error(
