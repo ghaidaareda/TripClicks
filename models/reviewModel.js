@@ -89,14 +89,16 @@ reviewSchema.post('save', function () {
 // findByIdAndUpdate
 // findByIdAndDelete
 reviewSchema.pre(/^findOneAnd/, async function (next) {
-	this.r = await this.findOne();
+	this.r = await this.model.findOne(this.getQuery());
 	// console.log(this.r);
 	next();
 });
 
 reviewSchema.post(/^findOneAnd/, async function () {
 	// await this.findOne(); does NOT work here, query has already executed
-	await this.r.constructor.calcAverageRatings(this.r.tour);
+	if (this.r) {
+        await this.r.constructor.calcAverageRatings(this.r.tour);
+    }
 });
 
 const Review = mongoose.model('Review', reviewSchema);
