@@ -143,7 +143,7 @@ tourSchema.virtual('reviews', {
 	localField: '_id',
 });
 
-//document middleware for pre & post doc create or save
+//document middleware for pre & post doc create or save :
 tourSchema.pre('save', function (next) {
 	this.slug = slugify(this.name, { lower: true });
 	next();
