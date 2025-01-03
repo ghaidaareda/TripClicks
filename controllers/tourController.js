@@ -1,59 +1,80 @@
 const Tour = require('./../models/tourModel');
-const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const mongoose = require('mongoose');
 const factory = require('./handlerFactory');
 
-exports.aliasTopTours = async (req, res, next) => {
+exports.aliasTopTours = async (
+	req,
+	res,
+	next
+) => {
 	req.query.limit = '5';
-	req.query.sort = '-ratingsAverage, price';
-	req.query.fields = 'name, price, difficulty';
+	req.query.sort =
+		'-ratingsAverage, price';
+	req.query.fields =
+		'name, price, difficulty';
 	next();
 };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-	//excute the query
-	const features = new APIFeatures(Tour.find(), req.query)
-		.filter()
-		.sort()
-		.limitFields()
-		.paginate();
-	const tours = await features.query;
+// exports.getAllTours = catchAsync(
+// 	async (req, res, next) => {
+// 		//excute the query
+// 		const features = new APIFeatures(
+// 			Tour.find(),
+// 			req.query
+// 		)
+// 			.filter()
+// 			.sort()
+// 			.limitFields()
+// 			.paginate();
+// 		const tours = await features.query;
 
-	//send request
-	res.status(200).json({
-		status: 'success',
-		requestedat: tours.length,
-		data: { tours },
-	});
-});
-exports.getOnetour = catchAsync(async (req, res, next) => {
-	// const { id } = req.params;
-	// // Validate ObjectId
-	// if (!mongoose.Types.ObjectId.isValid(id)) {
-	// 	return next(new AppError('Invalid ID format', 400)); // Bad request
-	// }
-	const tour = await Tour.findById(req.params.id).populate(
-		'reviews'
-	); // create new quary
+// 		//send request
+// 		res.status(200).json({
+// 			status: 'success',
+// 			requestedat: tours.length,
+// 			data: { tours },
+// 		});
+// 	}
+// );
 
-	//Tour.finfOne({_id: req.params.id}) both works rhe same
+exports.getAllTours =
+	factory.getAll(Tour);
+exports.createNewTour =
+	factory.createOne(Tour);
+exports.updateTour =
+	factory.updateOne(Tour);
+exports.deleteTour =
+	factory.deleteOne(Tour);
+exports.getOnetour = factory.getOne(
+	Tour,
+	{ path: 'reviews' }
+);
 
-	if (!tour) {
-		return next(
-			new AppError('No tour found with that id', 404)
-		);
-	}
-	res.status(200).json({
-		status: 'success',
-		data: { tour },
-	});
-});
+// exports.getOnetour = catchAsync(async (req, res, next) => {
+// 	// const { id } = req.params;
+// 	// // Validate ObjectId
+// 	// if (!mongoose.Types.ObjectId.isValid(id)) {
+// 	// 	return next(new AppError('Invalid ID format', 400)); // Bad request
+// 	// }
+// 	const tour = await Tour.findById(req.params.id).populate(
+// 		'reviews'
+// 	); // create new quary
 
-exports.createNewTour = factory.createOne(Tour)
-exports.updateTour = factory.updateOne(Tour);
-exports.deleteTour = factory.deleteOne(Tour);
+// 	//Tour.finfOne({_id: req.params.id}) both works rhe same
+
+// 	if (!tour) {
+// 		return next(
+// 			new AppError('No tour found with that id', 404)
+// 		);
+// 	}
+// 	res.status(200).json({
+// 		status: 'success',
+// 		data: { tour },
+// 	});
+// });
+
 // exports.deleteTour = catchAsync(async (req, res, next) => {
 // 	// const { id } = req.params;
 // 	// if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -75,14 +96,26 @@ exports.deleteTour = factory.deleteOne(Tour);
 exports.getTourStats = catchAsync(
 	async function (req, res, next) {
 		const stats = await Tour.aggregate([
-			{ $match: { ratingsAverage: { $gte: 4.5 } } },
+			{
+				$match: {
+					ratingsAverage: { $gte: 4.5 },
+				},
+			},
 			{
 				$group: {
-					_id: { $toUpper: '$difficulty' }, //null, //group by difficulty
+					_id: {
+						$toUpper: '$difficulty',
+					}, //null, //group by difficulty
 					numTours: { $sum: 1 }, // count documents
-					numRatings: { $sum: '$ratingsQuantity' },
-					averageRating: { $avg: '$ratingsAverage' },
-					averagePrice: { $avg: '$price' },
+					numRatings: {
+						$sum: '$ratingsQuantity',
+					},
+					averageRating: {
+						$avg: '$ratingsAverage',
+					},
+					averagePrice: {
+						$avg: '$price',
+					},
 					minPrice: { $min: '$price' },
 					maxPrice: { $max: '$price' },
 				},
@@ -113,14 +146,20 @@ exports.getMonthlyPlan = catchAsync(
 			{
 				$match: {
 					startDates: {
-						$gte: new Date(`${year}-01-01`),
-						$lte: new Date(`${year}-12-31`),
+						$gte: new Date(
+							`${year}-01-01`
+						),
+						$lte: new Date(
+							`${year}-12-31`
+						),
 					},
 				},
 			},
 			{
 				$group: {
-					_id: { $month: '$startDates' },
+					_id: {
+						$month: '$startDates',
+					},
 					numTourStarts: { $sum: 1 },
 					tour: { $push: '$name' },
 				},
