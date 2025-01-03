@@ -1,6 +1,7 @@
 const User = require('./../models/userModel');
 const AppError = require('./../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFileds) => {
 	const newObj = {};
@@ -68,15 +69,6 @@ exports.createNewUser = (req, res) => {
 		message: 'this route is not yet implemented',
 	});
 };
-exports.updateUser = (req, res) => {
-	res.status(500).json({
-		status: 'error',
-		message: 'this route is not yet implemented',
-	});
-};
-exports.deleteUser = (req, res) => {
-	res.status(500).json({
-		status: 'error',
-		message: 'this route is not yet implemented',
-	});
-};
+//dont update user with new password with this!
+exports.updateUser = factory.updateOne(User)
+exports.deleteUser = factory.deleteOne(User)
