@@ -3,13 +3,6 @@ const tourController = require('./../controllers/tourController');
 const checkBody = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
 const router = express.Router();
-<<<<<<< HEAD
-const reviewRouter = require('./../routes/reviewRoutes');
-
-router.use('/:tourid/reviews', reviewRouter);
-
-//router.param('id', tourController.checkID);
-=======
 //const reviewController = require('./../controllers/reviewController');
 const reviewRouter = require('./../routes/reviewRoutes');
 
@@ -17,7 +10,6 @@ const reviewRouter = require('./../routes/reviewRoutes');
 
 router.use('/:tourId/reviews', reviewRouter);
 
->>>>>>> ade5c3d3104b3a54eee7b59366a5448ee3fb0e46
 router
 	.route('/top-5-cheap')
 	.get(

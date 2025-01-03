@@ -4,7 +4,7 @@ const authController = require('./../controllers/authController');
 const reviewController = require('./../controllers/reviewController');
 
 const router = express.Router();
-const reviewController = require('./../controllers/reviewController');
+
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
