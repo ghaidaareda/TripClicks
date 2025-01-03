@@ -3,6 +3,7 @@ const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const mongoose = require('mongoose');
+const factory = require('./handlerFactory');
 
 exports.aliasTopTours = async (req, res, next) => {
 	req.query.limit = '5';
@@ -88,23 +89,24 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 	});
 });
 
-exports.deleteTour = catchAsync(async (req, res, next) => {
-	// const { id } = req.params;
-	// if (!mongoose.Types.ObjectId.isValid(id)) {
-	// 	return next(new AppError('Invalid ID format', 400)); // Bad request
-	// }
-	const tour = await Tour.findByIdAndDelete(req.params.id);
-	if (!tour) {
-		return next(
-			new AppError('No tour found with that id', 404)
-		);
-	}
-	res.status(204).json({
-		//no content ( null)
-		status: 'success',
-		data: null,
-	});
-});
+exports.deleteTour = factory.deleteOne(Tour);
+// exports.deleteTour = catchAsync(async (req, res, next) => {
+// 	// const { id } = req.params;
+// 	// if (!mongoose.Types.ObjectId.isValid(id)) {
+// 	// 	return next(new AppError('Invalid ID format', 400)); // Bad request
+// 	// }
+// 	const tour = await Tour.findByIdAndDelete(req.params.id);
+// 	if (!tour) {
+// 		return next(
+// 			new AppError('No tour found with that id', 404)
+// 		);
+// 	}
+// 	res.status(204).json({
+// 		//no content ( null)
+// 		status: 'success',
+// 		data: null,
+// 	});
+// });
 
 exports.getTourStats = catchAsync(
 	async function (req, res, next) {
