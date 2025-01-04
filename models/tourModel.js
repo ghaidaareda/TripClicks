@@ -68,6 +68,8 @@ const tourSchema = new mongoose.Schema(
 				5,
 				'rating must be between 1 and 5',
 			],
+			set: (val) =>
+				Math.round(val * 10) / 10,
 		},
 		ratingsQuantity: {
 			type: Number,
