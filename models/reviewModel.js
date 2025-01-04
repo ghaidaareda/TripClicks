@@ -85,11 +85,15 @@ reviewSchema.statics.calcAverageRatings =
 		]);
 		console.log(stats);
 
-		Tour.findByIdAndUpdate(tourId, {
-			ratingsQuantity: stats[0].nRating,
-			ratingsAverage:
-				stats[0].avgRating,
-		});
+		await Tour.findByIdAndUpdate(
+			tourId,
+			{
+				ratingsQuantity:
+					stats[0].nRating,
+				ratingsAverage:
+					stats[0].avgRating,
+			}
+		);
 	};
 
 // here this points to current review
