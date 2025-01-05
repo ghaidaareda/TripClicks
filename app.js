@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 fs = require('fs');
 const morgan = require('morgan');
@@ -10,8 +11,18 @@ const xss = require('xss-clean');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const hpp = require('hpp');
-const app = express();
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
+
+const app = express();
+
+// pug framwork:
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+//serve static files from folders not from server
+// app.use(express.static(`${__dirname}/starter/public`));
+app.use(express.static(path.join(__dirname, 'starter/public')));
 
 // GLOBAL middleware
 //security http headers
@@ -53,8 +64,6 @@ app.use(
 		],
 	})
 );
-//serve static files from folders not from server
-app.use(express.static(`${__dirname}/starter/public`));
 
 //test middleware
 app.use((req, res, next) => {
@@ -63,7 +72,9 @@ app.use((req, res, next) => {
 	next();
 });
 
-//ROUTES
+//Routes:
+//API ROUTES:
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter); //middleware to connect router to this app
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
@@ -74,12 +85,7 @@ app.all('*', function (req, res, next) {
 	// );
 	// err.status = fail;
 	// err.statusCode = 404;
-	next(
-		new AppError(
-			`can't find ${req.originalUrl} on this server`,
-			404
-		)
-	);
+	next(new AppError(`can't find ${req.originalUrl} on this server`, 404));
 });
 
 app.use(globlErrorHandlers);
