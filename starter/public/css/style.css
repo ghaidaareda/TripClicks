@@ -516,7 +516,7 @@ body {
 		100% calc(100% - var(--section-rotate)),
 		0 100%
 	);
-	margin-top: calc(0px - var(--section-rotate));
+	margin-top: calc(13px - var(--section-rotate));
 	position: relative;
 	z-index: 1000;
 }
@@ -540,7 +540,7 @@ body {
 
 .section-map {
 	position: relative;
-	height: 65rem;
+	height: 20rem;
 	margin-top: calc(0px - var(--section-rotate));
 }
 

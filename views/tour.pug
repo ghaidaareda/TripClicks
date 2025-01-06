@@ -1,6 +1,8 @@
 extends base
 include _reviewCard
 
+block append head
+
 mixin overviewBox(label, text, icon)
   .overview-box__detail
     svg.overview-box__icon
@@ -62,7 +64,6 @@ block content
         img.picture-box__img(src=`/img/tours/${img}`, alt=`${tour.name} ${i + 1}`, class=`picture-box__img--${i + 1}`)
 
   section.section-map
-    #map
 
   section.section-reviews
     .reviews
