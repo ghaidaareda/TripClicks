@@ -13,7 +13,7 @@ const userRouter = require('./routes/userRoutes');
 const hpp = require('hpp');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
-
+const cookieParser = require('cookie-parser');
 const app = express();
 
 // pug framwork:
@@ -45,6 +45,7 @@ app.use('/api', limiter);
 //body parser, read data from body into req.body
 
 app.use(express.json({ limit: '10kb' }));
+app.use(cookieParser());
 //data sanitization against NOSQL query injection
 app.use(mongoSanitize());
 //data sanitization against XSS
@@ -68,6 +69,7 @@ app.use(
 //test middleware
 app.use((req, res, next) => {
 	req.requestTime = new Date().toISOString();
+	console.log(req.cookies);
 	//console.log(req.headers);
 	next();
 });
