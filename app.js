@@ -22,7 +22,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 //serve static files from folders not from server
 // app.use(express.static(`${__dirname}/starter/public`));
-app.use(express.static(path.join(__dirname, 'starter/public')));
+app.use(
+	express.static(path.join(__dirname, 'starter/public'))
+);
 
 // GLOBAL middleware
 //security http headers
@@ -69,7 +71,7 @@ app.use(
 //test middleware
 app.use((req, res, next) => {
 	req.requestTime = new Date().toISOString();
-	console.log(req.cookies);
+	//console.log(req.cookies);
 	//console.log(req.headers);
 	next();
 });
@@ -87,7 +89,12 @@ app.all('*', function (req, res, next) {
 	// );
 	// err.status = fail;
 	// err.statusCode = 404;
-	next(new AppError(`can't find ${req.originalUrl} on this server`, 404));
+	next(
+		new AppError(
+			`can't find ${req.originalUrl} on this server`,
+			404
+		)
+	);
 });
 
 app.use(globlErrorHandlers);

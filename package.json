@@ -6,11 +6,14 @@
 	"scripts": {
 		"start": "nodemon server.js",
 		"start:prod": "cross-env NODE_ENV=production nodemon server.js",
-		"debug": "ndb server.js"
+		"debug": "ndb server.js",
+		"watch:js": "parcel watch ./starter/public/js/index.js --out-dir ./starter/public/js --out-file bundle.js",
+		"build:js": "parcel watch ./starter/public/js/index.js --out-dir ./starter/public/js --out-file bundle.js"
 	},
 	"author": "ghaidaa",
 	"license": "ISC",
 	"dependencies": {
+		"@babel/polyfill": "^7.12.1",
 		"axios": "^1.7.9",
 		"bcryptjs": "^2.4.3",
 		"cookie-parser": "^1.4.7",
@@ -39,6 +42,7 @@
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-react": "^7.37.2",
+		"parcel-bundler": "^1.12.3",
 		"prettier": "^3.3.3"
 	}
 }
