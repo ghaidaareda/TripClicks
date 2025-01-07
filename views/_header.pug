@@ -4,9 +4,11 @@ header.header
 	.header__logo
 		img(src='/img/logo.png-removebg-preview.png' alt='Tripclicks logo')
 	nav.nav.nav--user
-		//- a.nav__el(href='#') My bookings
-		//- a.nav__el(href='#')
-		//-   img.nav__user-img(src='img/iser.jpg' alt='user photo')
-		//-   span Jonas
-		a.nav__el(href='/login') Log in
-		a.nav__el.nav__el--cta(href='/signup') Sign up
+		if user
+			a.nav__el.nav__el--logout LOG OUT
+			a.nav__el(href='#')
+				img.nav__user-img(src=`img/users/${user.photo}` alt=`photo of ${user.name}`)
+				span=user.name.split(' ')[0]
+		else
+			a.nav__el(href='/login') LOG IN
+			a.nav__el.nav__el--cta(href='/signup') SIGN UP
