@@ -217,11 +217,6 @@ body {
 	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
-.btn:focus {
-	outline: none;
-	background-color: #2e864b;
-}
-
 .btn--white {
 	background-color: #fff;
 	color: #777;

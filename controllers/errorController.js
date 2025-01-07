@@ -28,31 +28,55 @@ const handleValidationErrorDB = (err) => {
 };
 
 // Send detailed error in development mode
-const sendErrorDev = (err, res) => {
-	res.status(err.statusCode).json({
-		status: err.status,
-		error: err,
-		message: err.message,
-		stack: err.stack,
+const sendErrorDev = (err, req, res) => {
+	if (req.originalUrl.startsWith('/api')) {
+		return res.status(err.statusCode).json({
+			status: err.status,
+			error: err,
+			message: err.message,
+			stack: err.stack,
+		});
+	}
+	return res.status(err.statusCode).render('error', {
+		title: 'Something went wrong‼⁉',
+		msg: err.message,
 	});
 };
 
 // Send simplified error in production mode
-const sendErrorProd = (err, res) => {
-	if (err.isOperational) {
-		res.status(err.statusCode).json({
-			status: err.status,
-			message: err.message,
-		});
-	} else {
+const sendErrorProd = (err, req, res) => {
+	//ApI
+	if (req.originalUrl.startsWith('/api')) {
+		//operational ,trusted errors
+		if (err.isOperational) {
+			return res.status(err.statusCode).json({
+				status: err.status,
+				message: err.message,
+			});
+			//oter unknown errors
+		}
 		// Log detailed error for debugging
 		console.error('ERROR 💥', err);
 		// Send generic error message
-		res.status(500).json({
+		return res.status(500).json({
 			status: 'error',
 			message: 'Something went wrong',
 		});
 	}
+	//for rendered websites
+	if (err.isOperational) {
+		return res.status(err.statusCode).render('error', {
+			title: 'Something went wrong‼⁉',
+			msg: err.message,
+		});
+	}
+	// Log detailed error for debugging
+	console.error('ERROR 💥', err);
+	// Send generic error message
+	return res.status(err.statusCode).render('error', {
+		title: 'Something went wrong‼⁉',
+		msg: 'please try again later',
+	});
 };
 
 // Global error-handling middleware
@@ -61,9 +85,10 @@ module.exports = (err, req, res, next) => {
 	err.status = err.status || 'error';
 
 	if (process.env.NODE_ENV === 'development') {
-		sendErrorDev(err, res);
+		sendErrorDev(err, req, res);
 	} else if (process.env.NODE_ENV === 'production') {
-		let error = Object.assign({}, err);
+		let error = { ...err };
+		error.message = err.message;
 
 		// Explicitly copy prototype properties for `CastError`
 		if (err.name === 'CastError') {
@@ -81,6 +106,6 @@ module.exports = (err, req, res, next) => {
 			error = handleJWTError(error);
 		if (err.name === 'TokenExpiredError')
 			error = handleTokenExpiredError();
-		sendErrorProd(error, res);
+		sendErrorProd(error, req, res);
 	}
 };
