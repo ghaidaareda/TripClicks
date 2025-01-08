@@ -1,2 +1,4 @@
 node_modules
 .cache
+starter/public/js/bundle.js
+starter/public/js/bundle.js.map
