@@ -4,9 +4,10 @@ import { showAlerts } from './alerts';
 
 export const updateData = async (name, email) => {
 	try {
+		console.log(name, email);
 		const res = await axios({
 			method: 'PATCH',
-			url: 'http://127.0.0.1:3000/api/v1/users/updateMe',
+			url: 'http://localhost:3000/api/v1/users/updateMe',
 			data: {
 				name,
 				email,
@@ -14,10 +15,10 @@ export const updateData = async (name, email) => {
 		});
 
 		if (res.data.status === 'success') {
-			showAlerts('success', `${type.toUpperCase()} updated successfully!`);
+			showAlerts('success', 'updated successfully!');
 		}
+		console.log(res);
 	} catch (err) {
-		console.log(err.response.data.message);
 		showAlerts('error', err.response.data.message);
 	}
 };
