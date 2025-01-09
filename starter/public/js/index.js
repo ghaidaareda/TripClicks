@@ -2,10 +2,12 @@
 import '@babel/polyfill';
 import { login, logOut } from './login';
 import { signup } from './signup';
+import { updateData } from './updateSettings';
 
 const loginForm = document.querySelector('.form--login');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const signUpForm = document.querySelector('.signup-form');
+const userDataform = document.querySelector('.form-user-data');
 
 if (signUpForm)
 	signUpForm.addEventListener('submit', (e) => {
@@ -28,3 +30,11 @@ if (loginForm)
 	});
 
 if (logOutBtn) logOutBtn.addEventListener('click', logOut);
+
+if (userDataform)
+	userDataform.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const name = document.getElementById('name').value;
+		const email = document.getElementById('email').value;
+		updateData(name, email);
+	});
