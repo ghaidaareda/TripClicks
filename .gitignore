@@ -2,5 +2,5 @@ node_modules
 .cache
 starter/public/js/bundle.js
 starter/public/js/bundle.js.map
-.env
+config.env
 starter/dev-data
