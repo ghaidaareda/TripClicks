@@ -3,4 +3,4 @@ node_modules
 starter/public/js/bundle.js
 starter/public/js/bundle.js.map
 config.env
-starter/dev-data
+starter/dev-data/
