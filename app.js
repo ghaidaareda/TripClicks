@@ -13,6 +13,7 @@ const userRouter = require('./routes/userRoutes');
 const hpp = require('hpp');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
+const bookingsRouter = require('./routes/bookingsRoutes');
 const cookieParser = require('cookie-parser');
 const app = express();
 
@@ -28,7 +29,25 @@ app.use(
 
 // GLOBAL middleware
 //security http headers
-app.use(helmet());
+app.use(
+	helmet.contentSecurityPolicy({
+		directives: {
+			defaultSrc: ["'self'"],
+			scriptSrc: ["'self'", 'https://js.stripe.com'],
+			objectSrc: ["'none'"], // Optional: if you want to block <object>, <embed>, and <applet> tags
+			styleSrc: ["'self'", "'unsafe-inline'"], // Allow inline styles
+			// Add other directives if necessary, e.g., imgSrc, fontSrc
+		},
+	})
+);
+
+app.use((req, res, next) => {
+	res.setHeader(
+		'Content-Security-Policy',
+		"script-src 'self' https://js.stripe.com;"
+	);
+	next();
+});
 
 // dev logging
 if (process.env === 'development') {
@@ -82,6 +101,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter); //middleware to connect router to this app
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+//app.use('/api/v1/bookings', bookingsRouter);
 
 app.all('*', function (req, res, next) {
 	// const err = new Error(
